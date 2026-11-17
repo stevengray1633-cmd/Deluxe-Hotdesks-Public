@@ -1,0 +1,455 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deluxe Hot Desk Bookings</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: #06121e;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 25px;
+  gap: 20px;
+  border-bottom: 1px solid #607080;
+}
+
+.logo {
+  color: #ff1835;
+  font-size: 44px;
+  font-weight: 900;
+  font-style: italic;
+}
+
+h1 { font-size: 30px; margin: 0; }
+
+.main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 15px;
+  padding: 15px;
+}
+
+.floor {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1200 / 1080;
+  background: #26303b;
+  border: 2px solid #8291a5;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.floor img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.desk {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 8%;
+  height: 5%;
+  border: 1px solid #555;
+  border-radius: 4px;
+  color: #111;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+
+.desk.booked { background: #ffb3b3; }
+.desk.available { background: #baff9b; }
+.desk.unknown { background: #b7c4d3; }
+
+.desk strong {
+  font-size: clamp(9px, 1.3vw, 19px);
+}
+
+.desk span {
+  font-size: clamp(7px, .85vw, 13px);
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+aside {
+  background: #091725;
+  border: 1px solid #718096;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+}
+
+#date {
+  font-size: 21px;
+  font-weight: bold;
+}
+
+#clock {
+  font-size: 55px;
+  font-weight: bold;
+  margin: 15px 0;
+}
+
+.legend {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: left;
+  margin: 25px 0;
+  padding: 20px 0;
+  border-top: 1px solid #81909d;
+  border-bottom: 1px solid #81909d;
+}
+
+.legend div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.swatch {
+  width: 32px;
+  height: 28px;
+  border-radius: 5px;
+}
+
+.green { background: #baff9b; }
+.pink { background: #ffb3b3; }
+
+.number {
+  font-size: 55px;
+  color: #91fa78;
+  font-weight: bold;
+}
+
+.footer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding: 0 15px 15px;
+}
+
+.stat {
+  border: 1px solid #81909d;
+  border-radius: 12px;
+  text-align: center;
+  padding: 12px;
+  font-size: 20px;
+}
+
+.stat strong {
+  display: block;
+  font-size: 42px;
+}
+
+#booked { color: #ff9999; }
+#available { color: #91fa78; }
+
+.demo {
+  color: #ffc56a;
+  font-size: 13px;
+}
+
+@media(max-width:900px) {
+  .main { grid-template-columns: 1fr; }
+  header { flex-wrap: wrap; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">DELUXE</div>
+  <h1>Hot Desk Bookings – 1st Floor</h1>
+  <div>Book via Envoy</div>
+</header>
+
+<div class="main">
+  <section>
+    <div class="floor" id="floor">
+      <img src="floorplan.png" alt="First floor 3D plan">
+    </div>
+  </section>
+
+  <aside>
+    <div id="date"></div>
+    <div id="clock"></div>
+
+    <div class="legend">
+      <div>
+        <span class="swatch green"></span>
+        Available
+      </div>
+      <div>
+        <span class="swatch pink"></span>
+        Booked
+      </div>
+    </div>
+
+    <h2>Desks Available</h2>
+
+    <div class="number">
+      <span id="availableSide">0</span> / 28
+    </div>
+
+    <p>Book a Desk via Envoy</p>
+    <p class="demo" id="feedStatus">
+      Waiting for Envoy data…
+    </p>
+    <p id="lastUpdated"
+       style="font-size:12px;color:#b9c8d8"></p>
+  </aside>
+</div>
+
+<div class="footer">
+  <div class="stat">
+    Booked Desks
+    <strong id="booked">0</strong>
+  </div>
+  <div class="stat">
+    Available Desks
+    <strong id="available">0</strong>
+  </div>
+  <div class="stat">
+    Total Desks
+    <strong>28</strong>
+  </div>
+</div>
+
+<script>
+
+// Existing desk positions preserved
+const positions = {
+  16:[16.5,33],
+  15:[24.5,33],
+  12:[16.5,38],
+  11:[24.5,38],
+
+  14:[38.5,33],
+  13:[46.5,33],
+  10:[38.5,38],
+  9:[46.5,38],
+
+  8:[16.5,57],
+  7:[24.5,57],
+  4:[16.5,62],
+  3:[24.5,62],
+
+  6:[38.5,57],
+  5:[46.5,57],
+  2:[38.5,62],
+  1:[46.5,62],
+
+  28:[72,36],
+  25:[81,36],
+  26:[90,36],
+  27:[72,41],
+  23:[81,41],
+  24:[90,41],
+
+  20:[72,59],
+  21:[81,59],
+  22:[90,59],
+  17:[72,64],
+  18:[81,64],
+  19:[90,64]
+};
+
+// Live booking feed
+// GitHub Actions generates bookings.json.
+// No Envoy API key is stored in this HTML.
+let bookings = {};
+let feedReady = false;
+
+async function refreshBookings() {
+  const status = document.getElementById("feedStatus");
+
+  try {
+    const response = await fetch(
+      "bookings.json?t=" + Date.now(),
+      { cache: "no-store" }
+    );
+
+    if (!response.ok) {
+      throw new Error("HTTP " + response.status);
+    }
+
+    const payload = await response.json();
+
+    if (
+      !payload ||
+      payload.ok !== true ||
+      !payload.generatedAt ||
+      !payload.date ||
+      !payload.bookings ||
+      typeof payload.bookings !== "object"
+    ) {
+      throw new Error("Invalid booking feed");
+    }
+
+    const today = new Intl.DateTimeFormat(
+      "en-CA",
+      {
+        timeZone: "Europe/London",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+      }
+    ).format(new Date());
+
+    if (payload.date !== today) {
+      throw new Error(
+        "Booking feed is for " + payload.date
+      );
+    }
+
+    const age =
+      Date.now() - Date.parse(payload.generatedAt);
+
+    if (
+      !Number.isFinite(age) ||
+      age < -120000 ||
+      age > 20 * 60 * 1000
+    ) {
+      throw new Error("Booking feed is stale");
+    }
+
+    bookings = payload.bookings;
+    feedReady = true;
+
+    status.textContent = "LIVE ENVOY DATA";
+    status.style.color = "#91fa78";
+
+    document.getElementById(
+      "lastUpdated"
+    ).textContent =
+      "Updated: " +
+      new Intl.DateTimeFormat(
+        "en-GB",
+        {
+          timeZone: "Europe/London",
+          hour: "2-digit",
+          minute: "2-digit"
+        }
+      ).format(new Date(payload.generatedAt));
+
+  } catch (err) {
+    feedReady = false;
+    bookings = {};
+
+    status.textContent =
+      "BOOKING DATA UNAVAILABLE — " + err.message;
+
+    status.style.color = "#ffc56a";
+
+    document.getElementById(
+      "lastUpdated"
+    ).textContent =
+      "Desk availability cannot be confirmed";
+  }
+
+  render();
+}
+
+// Draw the desks
+function render() {
+  const floor = document.getElementById("floor");
+
+  floor.querySelectorAll(".desk").forEach(
+    element => element.remove()
+  );
+
+  let booked = 0;
+
+  Object.entries(positions).forEach(([id, pos]) => {
+    const name = feedReady ? bookings[id] : null;
+
+    if (name) booked++;
+
+    const el = document.createElement("div");
+
+    el.className =
+      "desk " +
+      (!feedReady
+        ? "unknown"
+        : name
+          ? "booked"
+          : "available");
+
+    el.style.left = pos[0] + "%";
+    el.style.top = pos[1] + "%";
+
+    const number = document.createElement("strong");
+    number.textContent = id;
+
+    const label = document.createElement("span");
+    label.textContent =
+      !feedReady
+        ? "Unknown"
+        : name || "Available";
+
+    el.append(number, label);
+    floor.appendChild(el);
+  });
+
+  const total = Object.keys(positions).length;
+  const available = total - booked;
+
+  document.getElementById("booked").textContent =
+    feedReady ? booked : "—";
+
+  document.getElementById("available").textContent =
+    feedReady ? available : "—";
+
+  document.getElementById("availableSide").textContent =
+    feedReady ? available : "—";
+}
+
+// London clock
+function updateClock() {
+  const now = new Date();
+
+  document.getElementById("date").textContent =
+    new Intl.DateTimeFormat("en-GB", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      timeZone: "Europe/London"
+    }).format(now);
+
+  document.getElementById("clock").textContent =
+    new Intl.DateTimeFormat("en-GB", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+      timeZone: "Europe/London"
+    }).format(now);
+}
+
+render();
+updateClock();
+refreshBookings();
+
+setInterval(refreshBookings, 60000);
+setInterval(updateClock, 1000);
+
+</script>
+</body>
+</html>
