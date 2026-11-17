@@ -7,47 +7,82 @@
 <title>Deluxe Hot Desk Bookings</title>
 
 <style>
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
   background: #06121e;
   color: white;
-  font-family: Arial, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
+/* HEADER */
+
 header {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
-  padding: 15px 25px;
-  gap: 20px;
+  gap: 15px;
+  padding: 8px 20px;
+  min-height: 90px;
   border-bottom: 1px solid #607080;
 }
 
-.logo {
-  color: #ff1835;
-  font-size: 44px;
-  font-weight: 900;
-  font-style: italic;
+.branding {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
 }
 
-h1 { font-size: 30px; margin: 0; }
+.wordmark {
+  width: 180px;
+  max-width: 60%;
+  height: auto;
+  object-fit: contain;
+}
+
+.facilities-logo {
+  width: 68px;
+  height: 68px;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+h1 {
+  font-size: clamp(19px, 2vw, 30px);
+  margin: 0;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.book-via {
+  text-align: right;
+  font-size: 17px;
+}
+
+/* MAIN DASHBOARD */
 
 .main {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 280px;
-  gap: 15px;
-  padding: 15px;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  gap: 10px;
+  padding: 10px;
+  align-items: start;
 }
+
+/* FLOOR PLAN */
 
 .floor {
   position: relative;
-  width: 100%;
+  width: min(100%, calc((100vh - 125px) * 1200 / 1080));
   aspect-ratio: 1200 / 1080;
+  margin: 0 auto;
   background: #26303b;
   border: 2px solid #8291a5;
-  border-radius: 12px;
+  border-radius: 10px;
   overflow: hidden;
 }
 
@@ -56,6 +91,8 @@ h1 { font-size: 30px; margin: 0; }
   height: 100%;
   display: block;
 }
+
+/* DESK MARKERS */
 
 .desk {
   position: absolute;
@@ -73,37 +110,49 @@ h1 { font-size: 30px; margin: 0; }
   overflow: hidden;
 }
 
-.desk.booked { background: #ffb3b3; }
-.desk.available { background: #baff9b; }
-.desk.unknown { background: #b7c4d3; }
+.desk.booked {
+  background: #ffb3b3;
+}
+
+.desk.available {
+  background: #baff9b;
+}
+
+.desk.unknown {
+  background: #b7c4d3;
+}
 
 .desk strong {
-  font-size: clamp(9px, 1.3vw, 19px);
+  font-size: clamp(8px, 1.1vw, 18px);
+  line-height: 1.1;
 }
 
 .desk span {
-  font-size: clamp(7px, .85vw, 13px);
+  font-size: clamp(6px, .8vw, 12px);
   font-weight: bold;
   white-space: nowrap;
+  line-height: 1.1;
 }
+
+/* RIGHT INFORMATION PANEL */
 
 aside {
   background: #091725;
   border: 1px solid #718096;
-  border-radius: 12px;
-  padding: 20px;
+  border-radius: 10px;
+  padding: 16px;
   text-align: center;
 }
 
 #date {
-  font-size: 21px;
+  font-size: 19px;
   font-weight: bold;
 }
 
 #clock {
-  font-size: 55px;
+  font-size: 48px;
   font-weight: bold;
-  margin: 15px 0;
+  margin: 12px 0;
 }
 
 .legend {
@@ -111,8 +160,8 @@ aside {
   flex-direction: column;
   gap: 12px;
   text-align: left;
-  margin: 25px 0;
-  padding: 20px 0;
+  margin: 20px 0;
+  padding: 18px 0;
   border-top: 1px solid #81909d;
   border-bottom: 1px solid #81909d;
 }
@@ -124,51 +173,137 @@ aside {
 }
 
 .swatch {
-  width: 32px;
-  height: 28px;
+  width: 30px;
+  height: 26px;
   border-radius: 5px;
+  flex-shrink: 0;
 }
 
-.green { background: #baff9b; }
-.pink { background: #ffb3b3; }
+.green {
+  background: #baff9b;
+}
+
+.pink {
+  background: #ffb3b3;
+}
+
+aside h2 {
+  font-size: 22px;
+  margin: 18px 0;
+}
 
 .number {
-  font-size: 55px;
+  font-size: 48px;
   color: #91fa78;
   font-weight: bold;
 }
 
+#feedStatus {
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+#lastUpdated {
+  font-size: 12px;
+  color: #b9c8d8;
+}
+
+/* BOTTOM STATISTICS */
+
 .footer {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  padding: 0 15px 15px;
+  gap: 10px;
+  padding: 0 10px 10px;
 }
 
 .stat {
+  background: #091725;
   border: 1px solid #81909d;
-  border-radius: 12px;
+  border-radius: 10px;
   text-align: center;
-  padding: 12px;
-  font-size: 20px;
+  padding: 8px;
+  font-size: 17px;
 }
 
 .stat strong {
   display: block;
-  font-size: 42px;
+  font-size: 32px;
+  margin-top: 5px;
 }
 
-#booked { color: #ff9999; }
-#available { color: #91fa78; }
-
-.demo {
-  color: #ffc56a;
-  font-size: 13px;
+#booked {
+  color: #ff9999;
 }
 
-@media(max-width:900px) {
-  .main { grid-template-columns: 1fr; }
-  header { flex-wrap: wrap; }
+#available {
+  color: #91fa78;
+}
+
+/* SMALLER SCREENS */
+
+@media (max-width: 1000px) {
+  header {
+    grid-template-columns: 1fr auto;
+  }
+
+  h1 {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    padding-bottom: 8px;
+  }
+
+  .main {
+    grid-template-columns: 1fr;
+  }
+
+  .floor {
+    width: 100%;
+  }
+
+  aside {
+    max-width: none;
+  }
+}
+
+@media (max-width: 600px) {
+  header {
+    padding: 8px;
+  }
+
+  .wordmark {
+    width: 130px;
+  }
+
+  .facilities-logo {
+    width: 48px;
+    height: 48px;
+  }
+
+  .book-via {
+    font-size: 12px;
+  }
+
+  h1 {
+    font-size: 19px;
+    white-space: normal;
+  }
+
+  .desk strong {
+    font-size: 9px;
+  }
+
+  .desk span {
+    font-size: 6px;
+  }
+
+  .stat {
+    font-size: 12px;
+  }
+
+  .stat strong {
+    font-size: 24px;
+  }
 }
 </style>
 </head>
@@ -176,19 +311,40 @@ aside {
 <body>
 
 <header>
-  <div class="logo">DELUXE</div>
+  <div class="branding">
+    <img
+      class="wordmark"
+      src="deluxe-wordmark.png"
+      alt="Deluxe"
+    >
+
+    <img
+      class="facilities-logo"
+      src="deluxe-facilities-logo.png"
+      alt="Deluxe Facilities"
+    >
+  </div>
+
   <h1>Hot Desk Bookings – 1st Floor</h1>
-  <div>Book via Envoy</div>
+
+  <div class="book-via">
+    Book via Envoy
+  </div>
 </header>
 
 <div class="main">
+
   <section>
     <div class="floor" id="floor">
-      <img src="floorplan.png" alt="First floor 3D plan">
+      <img
+        src="floorplan.png"
+        alt="First floor 3D floor plan"
+      >
     </div>
   </section>
 
   <aside>
+
     <div id="date"></div>
     <div id="clock"></div>
 
@@ -197,6 +353,7 @@ aside {
         <span class="swatch green"></span>
         Available
       </div>
+
       <div>
         <span class="swatch pink"></span>
         Booked
@@ -206,36 +363,44 @@ aside {
     <h2>Desks Available</h2>
 
     <div class="number">
-      <span id="availableSide">0</span> / 28
+      <span id="availableSide">—</span> / 28
     </div>
 
     <p>Book a Desk via Envoy</p>
-    <p class="demo" id="feedStatus">
+
+    <p id="feedStatus">
       Waiting for Envoy data…
     </p>
-    <p id="lastUpdated"
-       style="font-size:12px;color:#b9c8d8"></p>
+
+    <p id="lastUpdated"></p>
+
   </aside>
+
 </div>
 
 <div class="footer">
+
   <div class="stat">
     Booked Desks
-    <strong id="booked">0</strong>
+    <strong id="booked">—</strong>
   </div>
+
   <div class="stat">
     Available Desks
-    <strong id="available">0</strong>
+    <strong id="available">—</strong>
   </div>
+
   <div class="stat">
     Total Desks
     <strong>28</strong>
   </div>
+
 </div>
 
 <script>
 
-// Existing desk positions preserved
+/* EXISTING DESK POSITIONS */
+
 const positions = {
   16:[16.5,33],
   15:[24.5,33],
@@ -272,16 +437,27 @@ const positions = {
   19:[90,64]
 };
 
-// Live booking feed
-// GitHub Actions generates bookings.json.
-// No Envoy API key is stored in this HTML.
+/*
+  LIVE ENVOY BOOKING FEED
+
+  GitHub Actions generates bookings.json.
+
+  No API key, employee names or
+  private credentials are stored here.
+*/
+
 let bookings = {};
 let feedReady = false;
 
+/* READ LIVE BOOKINGS */
+
 async function refreshBookings() {
-  const status = document.getElementById("feedStatus");
+
+  const status =
+    document.getElementById("feedStatus");
 
   try {
+
     const response = await fetch(
       "bookings.json?t=" + Date.now(),
       { cache: "no-store" }
@@ -299,20 +475,27 @@ async function refreshBookings() {
       !payload.generatedAt ||
       !payload.date ||
       !payload.bookings ||
-      typeof payload.bookings !== "object"
+      typeof payload.bookings !== "object" ||
+      Array.isArray(payload.bookings)
     ) {
       throw new Error("Invalid booking feed");
     }
 
-    const today = new Intl.DateTimeFormat(
-      "en-CA",
-      {
+    const todayParts =
+      new Intl.DateTimeFormat("en-GB", {
         timeZone: "Europe/London",
         year: "numeric",
         month: "2-digit",
         day: "2-digit"
-      }
-    ).format(new Date());
+      }).formatToParts(new Date());
+
+    const datePart = type =>
+      todayParts.find(p => p.type === type).value;
+
+    const today =
+      datePart("year") + "-" +
+      datePart("month") + "-" +
+      datePart("day");
 
     if (payload.date !== today) {
       throw new Error(
@@ -331,7 +514,19 @@ async function refreshBookings() {
       throw new Error("Booking feed is stale");
     }
 
-    bookings = payload.bookings;
+    /*
+      Only booking status is used.
+      Employee names are never displayed.
+    */
+
+    const cleanBookings = {};
+
+    for (const id of Object.keys(positions)) {
+      cleanBookings[id] =
+        payload.bookings[id] === "Booked";
+    }
+
+    bookings = cleanBookings;
     feedReady = true;
 
     status.textContent = "LIVE ENVOY DATA";
@@ -341,21 +536,20 @@ async function refreshBookings() {
       "lastUpdated"
     ).textContent =
       "Updated: " +
-      new Intl.DateTimeFormat(
-        "en-GB",
-        {
-          timeZone: "Europe/London",
-          hour: "2-digit",
-          minute: "2-digit"
-        }
-      ).format(new Date(payload.generatedAt));
+      new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Europe/London",
+        hour: "2-digit",
+        minute: "2-digit"
+      }).format(new Date(payload.generatedAt));
 
   } catch (err) {
+
     feedReady = false;
     bookings = {};
 
     status.textContent =
-      "BOOKING DATA UNAVAILABLE — " + err.message;
+      "BOOKING DATA UNAVAILABLE — " +
+      err.message;
 
     status.style.color = "#ffc56a";
 
@@ -368,9 +562,12 @@ async function refreshBookings() {
   render();
 }
 
-// Draw the desks
+/* DRAW DESKS */
+
 function render() {
-  const floor = document.getElementById("floor");
+
+  const floor =
+    document.getElementById("floor");
 
   floor.querySelectorAll(".desk").forEach(
     element => element.remove()
@@ -378,55 +575,78 @@ function render() {
 
   let booked = 0;
 
-  Object.entries(positions).forEach(([id, pos]) => {
-    const name = feedReady ? bookings[id] : null;
+  Object.entries(positions).forEach(
+    ([id, pos]) => {
 
-    if (name) booked++;
+      const isBooked =
+        feedReady && bookings[id] === true;
 
-    const el = document.createElement("div");
+      if (isBooked) booked++;
 
-    el.className =
-      "desk " +
-      (!feedReady
-        ? "unknown"
-        : name
-          ? "booked"
-          : "available");
+      const el =
+        document.createElement("div");
 
-    el.style.left = pos[0] + "%";
-    el.style.top = pos[1] + "%";
+      el.className =
+        "desk " +
+        (!feedReady
+          ? "unknown"
+          : isBooked
+            ? "booked"
+            : "available");
 
-    const number = document.createElement("strong");
-    number.textContent = id;
+      el.style.left = pos[0] + "%";
+      el.style.top = pos[1] + "%";
 
-    const label = document.createElement("span");
-    label.textContent =
-      !feedReady
-        ? "Unknown"
-        : name || "Available";
+      const number =
+        document.createElement("strong");
 
-    el.append(number, label);
-    floor.appendChild(el);
-  });
+      number.textContent = id;
 
-  const total = Object.keys(positions).length;
+      const label =
+        document.createElement("span");
+
+      label.textContent =
+        !feedReady
+          ? "Unknown"
+          : isBooked
+            ? "Booked"
+            : "Available";
+
+      el.append(number, label);
+      floor.appendChild(el);
+    }
+  );
+
+  const total =
+    Object.keys(positions).length;
+
   const available = total - booked;
 
-  document.getElementById("booked").textContent =
+  document.getElementById(
+    "booked"
+  ).textContent =
     feedReady ? booked : "—";
 
-  document.getElementById("available").textContent =
+  document.getElementById(
+    "available"
+  ).textContent =
     feedReady ? available : "—";
 
-  document.getElementById("availableSide").textContent =
+  document.getElementById(
+    "availableSide"
+  ).textContent =
     feedReady ? available : "—";
 }
 
-// London clock
+/* LONDON CLOCK */
+
 function updateClock() {
+
   const now = new Date();
 
-  document.getElementById("date").textContent =
+  document.getElementById(
+    "date"
+  ).textContent =
     new Intl.DateTimeFormat("en-GB", {
       weekday: "long",
       day: "numeric",
@@ -434,7 +654,9 @@ function updateClock() {
       timeZone: "Europe/London"
     }).format(now);
 
-  document.getElementById("clock").textContent =
+  document.getElementById(
+    "clock"
+  ).textContent =
     new Intl.DateTimeFormat("en-GB", {
       hour: "2-digit",
       minute: "2-digit",
@@ -443,13 +665,21 @@ function updateClock() {
     }).format(now);
 }
 
+/* START DASHBOARD */
+
 render();
 updateClock();
 refreshBookings();
 
+/* REFRESH LIVE DATA EVERY MINUTE */
+
 setInterval(refreshBookings, 60000);
+
+/* UPDATE CLOCK */
+
 setInterval(updateClock, 1000);
 
 </script>
+
 </body>
 </html>
