@@ -7,9 +7,7 @@
 <title>Deluxe Hot Desk Bookings</title>
 
 <style>
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
@@ -19,7 +17,6 @@ body {
 }
 
 /* HEADER */
-
 header {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
@@ -64,7 +61,6 @@ h1 {
 }
 
 /* MAIN DASHBOARD */
-
 .main {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 260px;
@@ -74,7 +70,6 @@ h1 {
 }
 
 /* FLOOR PLAN */
-
 .floor {
   position: relative;
   width: min(100%, calc((100vh - 125px) * 1200 / 1080));
@@ -93,7 +88,6 @@ h1 {
 }
 
 /* DESK MARKERS */
-
 .desk {
   position: absolute;
   transform: translate(-50%, -50%);
@@ -110,17 +104,9 @@ h1 {
   overflow: hidden;
 }
 
-.desk.booked {
-  background: #ffb3b3;
-}
-
-.desk.available {
-  background: #baff9b;
-}
-
-.desk.unknown {
-  background: #b7c4d3;
-}
+.desk.booked { background: #ffb3b3; }
+.desk.available { background: #baff9b; }
+.desk.unknown { background: #b7c4d3; }
 
 .desk strong {
   font-size: clamp(8px, 1.1vw, 18px);
@@ -135,7 +121,6 @@ h1 {
 }
 
 /* RIGHT INFORMATION PANEL */
-
 aside {
   background: #091725;
   border: 1px solid #718096;
@@ -179,13 +164,8 @@ aside {
   flex-shrink: 0;
 }
 
-.green {
-  background: #baff9b;
-}
-
-.pink {
-  background: #ffb3b3;
-}
+.green { background: #baff9b; }
+.pink { background: #ffb3b3; }
 
 aside h2 {
   font-size: 22px;
@@ -209,7 +189,6 @@ aside h2 {
 }
 
 /* BOTTOM STATISTICS */
-
 .footer {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -232,16 +211,10 @@ aside h2 {
   margin-top: 5px;
 }
 
-#booked {
-  color: #ff9999;
-}
-
-#available {
-  color: #91fa78;
-}
+#booked { color: #ff9999; }
+#available { color: #91fa78; }
 
 /* SMALLER SCREENS */
-
 @media (max-width: 1000px) {
   header {
     grid-template-columns: 1fr auto;
@@ -260,50 +233,28 @@ aside h2 {
   .floor {
     width: 100%;
   }
-
-  aside {
-    max-width: none;
-  }
 }
 
 @media (max-width: 600px) {
-  header {
-    padding: 8px;
-  }
-
-  .wordmark {
-    width: 130px;
-  }
+  header { padding: 8px; }
+  .wordmark { width: 130px; }
 
   .facilities-logo {
     width: 48px;
     height: 48px;
   }
 
-  .book-via {
-    font-size: 12px;
-  }
+  .book-via { font-size: 12px; }
 
   h1 {
     font-size: 19px;
     white-space: normal;
   }
 
-  .desk strong {
-    font-size: 9px;
-  }
-
-  .desk span {
-    font-size: 6px;
-  }
-
-  .stat {
-    font-size: 12px;
-  }
-
-  .stat strong {
-    font-size: 24px;
-  }
+  .desk strong { font-size: 9px; }
+  .desk span { font-size: 6px; }
+  .stat { font-size: 12px; }
+  .stat strong { font-size: 24px; }
 }
 </style>
 </head>
@@ -312,17 +263,13 @@ aside h2 {
 
 <header>
   <div class="branding">
-    <img
-      class="wordmark"
-      src="deluxe-wordmark.png"
-      alt="Deluxe"
-    >
+    <img class="wordmark"
+         src="deluxe-wordmark.png"
+         alt="Deluxe">
 
-    <img
-      class="facilities-logo"
-      src="deluxe-facilities-logo.png"
-      alt="Deluxe Facilities"
-    >
+    <img class="facilities-logo"
+         src="deluxe-facilities-logo.png"
+         alt="Deluxe Facilities">
   </div>
 
   <h1>Hot Desk Bookings – 1st Floor – 98 Theobalds Road</h1>
@@ -336,15 +283,12 @@ aside h2 {
 
   <section>
     <div class="floor" id="floor">
-      <img
-        src="floorplan.png"
-        alt="First floor 3D floor plan"
-      >
+      <img src="floorplan.png"
+           alt="First floor 3D floor plan">
     </div>
   </section>
 
   <aside>
-
     <div id="date"></div>
     <div id="clock"></div>
 
@@ -353,7 +297,6 @@ aside h2 {
         <span class="swatch green"></span>
         Available
       </div>
-
       <div>
         <span class="swatch pink"></span>
         Booked
@@ -369,17 +312,15 @@ aside h2 {
     <p>Book a Desk via Envoy</p>
 
     <p id="feedStatus">
-      Waiting for Envoy data…
+      Loading today's Envoy bookings...
     </p>
 
     <p id="lastUpdated"></p>
-
   </aside>
 
 </div>
 
 <div class="footer">
-
   <div class="stat">
     Booked Desks
     <strong id="booked">—</strong>
@@ -394,13 +335,11 @@ aside h2 {
     Total Desks
     <strong>28</strong>
   </div>
-
 </div>
 
 <script>
 
 /* EXISTING DESK POSITIONS */
-
 const positions = {
   16:[16.5,33],
   15:[24.5,33],
@@ -438,26 +377,42 @@ const positions = {
 };
 
 /*
-  LIVE ENVOY BOOKING FEED
+  DAILY ENVOY BOOKING SNAPSHOT
 
   GitHub Actions generates bookings.json.
 
-  No API key, employee names or
-  private credentials are stored here.
+  The dashboard uses today's saved bookings.
+  No employee names or API credentials
+  are displayed or stored in this HTML.
 */
 
 let bookings = {};
 let feedReady = false;
 
-/* READ LIVE BOOKINGS */
+/* GET TODAY'S LONDON DATE */
+function londonDate() {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/London",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  }).formatToParts(new Date());
 
+  const part = name =>
+    parts.find(p => p.type === name).value;
+
+  return part("year") + "-" +
+         part("month") + "-" +
+         part("day");
+}
+
+/* READ SAVED DAILY BOOKINGS */
 async function refreshBookings() {
 
   const status =
     document.getElementById("feedStatus");
 
   try {
-
     const response = await fetch(
       "bookings.json?t=" + Date.now(),
       { cache: "no-store" }
@@ -478,46 +433,37 @@ async function refreshBookings() {
       typeof payload.bookings !== "object" ||
       Array.isArray(payload.bookings)
     ) {
-      throw new Error("Invalid booking feed");
+      throw new Error("Invalid booking data");
     }
 
-    const todayParts =
-      new Intl.DateTimeFormat("en-GB", {
-        timeZone: "Europe/London",
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit"
-      }).formatToParts(new Date());
-
-    const datePart = type =>
-      todayParts.find(p => p.type === type).value;
-
-    const today =
-      datePart("year") + "-" +
-      datePart("month") + "-" +
-      datePart("day");
+    /* Only accept bookings for today */
+    const today = londonDate();
 
     if (payload.date !== today) {
       throw new Error(
-        "Booking feed is for " + payload.date
+        "Waiting for today's bookings"
       );
     }
 
-    const age =
-      Date.now() - Date.parse(payload.generatedAt);
+    /*
+      The previous 20-minute expiry has
+      been removed.
+
+      Today's saved bookings remain valid
+      throughout the current day.
+    */
+
+    const generated =
+      Date.parse(payload.generatedAt);
 
     if (
-      !Number.isFinite(age) ||
-      age < -120000 ||
-      age > 20 * 60 * 1000
+      !Number.isFinite(generated) ||
+      generated > Date.now() + 120000
     ) {
-      throw new Error("Booking feed is stale");
+      throw new Error(
+        "Invalid booking generation time"
+      );
     }
-
-    /*
-      Only booking status is used.
-      Employee names are never displayed.
-    */
 
     const cleanBookings = {};
 
@@ -529,18 +475,20 @@ async function refreshBookings() {
     bookings = cleanBookings;
     feedReady = true;
 
-    status.textContent = "LIVE ENVOY DATA";
+    status.textContent =
+      "TODAY'S ENVOY BOOKINGS";
+
     status.style.color = "#91fa78";
 
     document.getElementById(
       "lastUpdated"
     ).textContent =
-      "Updated: " +
+      "Bookings saved at: " +
       new Intl.DateTimeFormat("en-GB", {
         timeZone: "Europe/London",
         hour: "2-digit",
         minute: "2-digit"
-      }).format(new Date(payload.generatedAt));
+      }).format(new Date(generated));
 
   } catch (err) {
 
@@ -563,7 +511,6 @@ async function refreshBookings() {
 }
 
 /* DRAW DESKS */
-
 function render() {
 
   const floor =
@@ -638,8 +585,7 @@ function render() {
     feedReady ? available : "—";
 }
 
-/* LONDON CLOCK */
-
+/* LONDON DATE AND CLOCK */
 function updateClock() {
 
   const now = new Date();
@@ -665,18 +611,62 @@ function updateClock() {
     }).format(now);
 }
 
-/* START DASHBOARD */
-
+/* INITIAL DASHBOARD LOAD */
 render();
 updateClock();
 refreshBookings();
 
-/* REFRESH LIVE DATA EVERY MINUTE */
+/*
+  DAILY SNAPSHOT CHECK
 
-setInterval(refreshBookings, 60000);
+  The page reads the saved JSON on opening.
 
-/* UPDATE CLOCK */
+  If left open overnight, it checks for
+  the new day and again after 7:10 AM.
 
+  This does not call Envoy's API.
+*/
+
+let lastCalendarDate = londonDate();
+let lastMorningCheck = "";
+
+setInterval(() => {
+
+  const today = londonDate();
+
+  const timeParts =
+    new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Europe/London",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false
+    }).formatToParts(new Date());
+
+  const part = name =>
+    timeParts.find(p => p.type === name).value;
+
+  const minutes =
+    Number(part("hour")) * 60 +
+    Number(part("minute"));
+
+  /* New calendar day */
+  if (today !== lastCalendarDate) {
+    lastCalendarDate = today;
+    refreshBookings();
+  }
+
+  /* Check today's saved file after 07:10 */
+  if (
+    minutes >= 430 &&
+    lastMorningCheck !== today
+  ) {
+    lastMorningCheck = today;
+    refreshBookings();
+  }
+
+}, 60000);
+
+/* KEEP CLOCK RUNNING */
 setInterval(updateClock, 1000);
 
 </script>
