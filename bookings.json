@@ -1,8 +1,9 @@
 {
   "ok": true,
   "date": "2026-11-18",
-  "generatedAt": "2026-11-18T11:34:27.843871Z",
+  "generatedAt": "2026-11-18T13:56:21.158873Z",
   "bookings": {
+    "9": "Booked",
     "20": "Booked",
     "8": "Booked",
     "13": "Booked",
