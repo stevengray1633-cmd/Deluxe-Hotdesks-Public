@@ -1,15 +1,7 @@
 {
   "ok": true,
-  "date": "2026-11-20",
-  "generatedAt": "2026-11-20T08:14:38.516733Z",
-  "bookings": {
-    "17": "Booked",
-    "10": "Booked",
-    "21": "Booked",
-    "22": "Booked",
-    "16": "Booked",
-    "12": "Booked",
-    "6": "Booked"
-  },
+  "date": "2026-11-21",
+  "generatedAt": "2026-11-21T08:04:50.971733Z",
+  "bookings": {},
   "totalDesks": 28
 }
