@@ -256,6 +256,130 @@ aside h2 {
   .stat { font-size: 12px; }
   .stat strong { font-size: 24px; }
 }
+
+/* LANDSCAPE TV / RASPBERRY PI FIT */
+@media (min-width: 900px) and (min-aspect-ratio: 4/3) and (min-height: 450px) {
+
+  html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  body {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+  }
+
+  header {
+    grid-template-columns: 1fr auto 1fr;
+    min-height: 0;
+    padding: 6px 16px;
+  }
+
+  h1 {
+    grid-column: auto;
+    grid-row: auto;
+    padding: 0;
+    font-size: clamp(16px, 2vw, 36px);
+  }
+
+  .wordmark {
+    width: clamp(90px, 12vw, 220px);
+  }
+
+  .facilities-logo {
+    width: clamp(30px, 6vh, 68px);
+    height: clamp(30px, 6vh, 68px);
+  }
+
+  .main {
+    grid-template-columns: minmax(0, 1fr) clamp(190px, 22vw, 420px);
+    min-height: 0;
+    align-items: stretch;
+    padding: 8px;
+  }
+
+  .main section {
+    min-width: 0;
+    min-height: 0;
+    display: grid;
+    place-items: center;
+    container-type: size;
+  }
+
+  .floor {
+    width: min(100cqw, calc(100cqh * 1200 / 1080));
+    max-height: 100%;
+    margin: 0;
+  }
+
+  aside {
+    align-self: center;
+    padding: clamp(8px, 1.5vh, 18px);
+    max-height: 100%;
+    overflow: auto;
+  }
+
+  #date {
+    font-size: clamp(14px, 2.5vh, 30px);
+  }
+
+  #clock, .number {
+    font-size: clamp(28px, 6vh, 70px);
+    margin: 4px 0;
+  }
+
+  .legend {
+    font-size: clamp(13px, 2.3vh, 26px);
+    gap: 6px;
+    margin: 8px 0;
+    padding: 8px 0;
+  }
+
+  .swatch {
+    width: clamp(16px, 3vh, 32px);
+    height: clamp(14px, 2.5vh, 28px);
+  }
+
+  aside h2 {
+    font-size: clamp(15px, 2.8vh, 32px);
+    margin: 8px 0;
+  }
+
+  aside p {
+    margin: 5px 0;
+    font-size: clamp(12px, 2vh, 22px);
+  }
+
+  #feedStatus, #lastUpdated {
+    font-size: clamp(10px, 1.6vh, 18px);
+  }
+
+  .footer {
+    padding: 0 8px 8px;
+    gap: 8px;
+  }
+
+  .stat {
+    padding: 4px;
+    font-size: clamp(12px, 2vh, 24px);
+  }
+
+  .stat strong {
+    font-size: clamp(20px, 3.5vh, 40px);
+    margin-top: 2px;
+  }
+
+  .desk strong {
+    font-size: clamp(7px, 1.5cqh, 18px);
+  }
+
+  .desk span {
+    font-size: clamp(5px, 1.1cqh, 12px);
+  }
+}
+
 </style>
 </head>
 
@@ -297,6 +421,7 @@ aside h2 {
         <span class="swatch green"></span>
         Available
       </div>
+
       <div>
         <span class="swatch pink"></span>
         Booked
@@ -391,6 +516,7 @@ let feedReady = false;
 
 /* GET TODAY'S LONDON DATE */
 function londonDate() {
+
   const parts = new Intl.DateTimeFormat("en-GB", {
     timeZone: "Europe/London",
     year: "numeric",
@@ -413,6 +539,7 @@ async function refreshBookings() {
     document.getElementById("feedStatus");
 
   try {
+
     const response = await fetch(
       "bookings.json?t=" + Date.now(),
       { cache: "no-store" }
@@ -446,9 +573,6 @@ async function refreshBookings() {
     }
 
     /*
-      The previous 20-minute expiry has
-      been removed.
-
       Today's saved bookings remain valid
       throughout the current day.
     */
